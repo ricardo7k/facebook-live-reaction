@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt_br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facebook Stream</title>
+</head>
+<body>
+  <div id="content_txt"></div>
+  <script>
+  var id_post = 195960470880344;
+  var id_page = 102061003603625;
+  var id_app = 385296931836091;
+  var token = 'EAACEdEose0cBAIIi476Go4WZCxPYPh2pRDKadK5iGPFoAXrTskZC5PmyqZB7Po3ZBcwnLgdSKu8ZBjGuWUXGd2FtwTrqZA91q74PFzccOFZAiZBVy1ZB5nU5F4Njnh8mMhWuyNWCQAhMj61yluwEM4k2z4NavOzlsQsMa7ZAZBrdSvqw9LXQ7yFhurS8NlRZBbMxcTAZD';
+  var content = document.getElementById("content_txt");
+    function showInfo() {
+
+      FB.api(
+          "/"+id_page+"_"+id_post+"/reactions",
+          {
+            access_token : token
+          },
+          function (response) {
+            if (response && !response.error) {
+              var like = 0;
+              var love = 0;
+              for(var i=0; i<response.data.length; i++) {
+                var item = response.data[i];
+                switch (item.type) {
+                  case "LIKE":
+                    like++;
+                    break;
+                  case "LOVE":
+                    love++;
+                    break;
+                  default:
+                    break;
+                }
+              }
+              content.innerHTML = "<h1>Like: " + like + "</h1>"+
+                                  "<h1>Love: " + love + "</h1>";
+            } else {
+              content.innerHTML = "ERROR.";
+            }
+          }
+      );
+      setTimeout(showInfo, 2000);
+    }
+
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : id_app,
+        xfbml      : true,
+        version    : 'v2.8'
+      });
+      FB.AppEvents.logPageView();
+      showInfo();
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+</body>
+</html>
